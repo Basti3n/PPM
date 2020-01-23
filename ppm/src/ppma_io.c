@@ -2,6 +2,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <time.h>
+# include <stdio.h> 
 
 # include "ppma_io.h"
 
@@ -360,8 +361,8 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
 {
   FILE *input;
   int numbytes;
-
-  input = fopen ( input_name, "rt" );
+  input_name[strlen(input_name)-5] = '\0';
+  input = fopen ( input_name, "rb" );
 
   if ( !input )
   {
@@ -373,15 +374,15 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
 /*
   Read the header.
 */
-  ppma_read_header ( input, xsize, ysize, rgb_max );
+   ppma_read_header ( input, xsize, ysize, rgb_max );
 /*
   Allocate storage for the data.
 */
   numbytes = (*xsize) * (*ysize) * sizeof ( int );
-
   *r = ( int * ) malloc ( numbytes * sizeof ( int ) );
   *g = ( int * ) malloc ( numbytes * sizeof ( int ) );
   *b = ( int * ) malloc ( numbytes * sizeof ( int ) );
+ 
 /*
   Read the data.
 */
@@ -493,11 +494,10 @@ void ppma_read_header ( FILE *input, int *xsize, int *ysize, int *rgb_max )
   char word[LINE_MAX];
 
   step = 0;
-
   while ( 1 )
   {
     error = fgets ( line, LINE_MAX, input );
-
+    
     if ( !error )
     {
       fprintf ( stderr, "\n" );
@@ -505,7 +505,6 @@ void ppma_read_header ( FILE *input, int *xsize, int *ysize, int *rgb_max )
       fprintf ( stderr, "  End of file.\n" );
       exit ( 1 );
     }
-
     next = line;
 
     if ( line[0] == '#' )
@@ -529,11 +528,11 @@ void ppma_read_header ( FILE *input, int *xsize, int *ysize, int *rgb_max )
         exit ( 1 );
       }
       step = 1;
+      //continue;
     }
 
     if ( step == 1 )
     {
-
       count = sscanf ( next, "%d%n", xsize, &width );
       next = next + width;
       if ( count == EOF )

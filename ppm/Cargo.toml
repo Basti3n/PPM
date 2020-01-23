@@ -1,7 +1,10 @@
 [package]
 name = "ppm"
-version = "0.1.0"
-authors = ["Bastien MSI <nisole.bastien@outlook.fr>"]
+version = "5.0.0"
+authors = [
+    "Bastien MSI <nisole.bastien@outlook.fr>",
+    "Alexis Desjardins <vizuar.gamer@gmail.com>"
+    ]
 edition = "2018"
 build = "build.rs"
 
@@ -14,3 +17,4 @@ c_string = "0.7.0"
 [lib]
 name = "ppm"
 crate-type = ["dylib"]
+sha1 = "0.6.0"

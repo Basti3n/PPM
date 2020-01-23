@@ -1,6 +1,7 @@
 #! /bin/bash
 
 gcc -c -Wall -I  ppma_io.c ppma_io.h -o output.o
+ar rcs libmylib.a output.o
 if [ $? -ne 0 ]; then
   echo "Compile error."
   exit
