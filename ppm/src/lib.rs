@@ -12,7 +12,7 @@ mod tests {
 }
 
 #[no_mangle]
-pub extern fn dummy() ->u8{
+pub extern fn dummy() -> u8{
     return 42;
 }
 
@@ -21,14 +21,44 @@ pub extern fn max(a:u8, b:u8)->u8{
     return if a > b {a} else {b};
 }
 
+#[derive(Debug, Clone, Copy)]
 struct Pixel{
     r:u8,
     g:u8,
     b:u8
 }
 
+//struct Pixel{
+//    pixel:[Color;8]
+//}
+
 struct Image{
-    image:[Pixel;24]
+    height: usize,
+    width: usize,
+    image:Vec<Pixel>
+}
+
+impl Pixel{
+    fn new(red: u8, green: u8, blue: u8) -> Pixel {
+        Pixel {r: red, g: green, b: blue}
+    }
+    fn red(&self) -> u8 {
+        self.r
+    }
+    fn green(&self) -> u8 {
+        self.g
+    }
+    fn blue(&self) -> u8 {
+        self.b
+    }
+    fn display(self) {
+        println!("({:x} {:x} {:x})", self.r, self.g, self.b)
+    }
+    fn invert(mut self){
+        self.r = 255 - self.r;
+        self.g = 255 - self.g;
+        self.b = 255 - self.b;
+    }
 }
 
 
