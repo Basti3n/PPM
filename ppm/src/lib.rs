@@ -45,8 +45,8 @@ struct Pixel{
 //}
 
 struct Image{
-    height: usize,
-    width: usize,
+    height: * mut c_int,
+    width: * mut c_int,
     image:Vec<Pixel>
 }
 /*
@@ -123,17 +123,45 @@ pub extern fn readPPM(  input_name: *const c_char,
                         gp:* mut c_int, 
                         bp:* mut c_int
                     )-> * mut c_int {
+
+    /*                        
     let xsize:* mut c_int = xsizep ;
-    let ysize:* mut c_int = ysizep ; 
+    let ysize:* mut c_int = ysizep ; */
     let rgb_max:* mut c_int = rgb_maxp ;
-    let r:* mut c_int = rp ; 
-    let g:* mut c_int = gp ;
-    let b:* mut c_int = bp ;
+    let mut r:* mut c_int = rp; 
+    let mut g:* mut c_int = gp;
+    let mut b:* mut c_int = bp;
+    let mut ar:*mut i32;
+    let mut ag:*mut i32;
+    let mut ab:*mut i32;
+
+    let image = Image{
+        height : xsizep,
+        width : ysizep,
+        image:Vec::new()
+    };
+
     let filename = unsafe {
         CStr::from_ptr(input_name).to_string_lossy().into_owned().to_string()
     };
     println!("{}",filename);
-    unsafe { ppma_read(filename.as_ptr(), &xsize, &ysize,&rgb_max, &r, &g, &b) };
+    unsafe { ppma_read(filename.as_ptr(), &image.height, &image.width,&rgb_max, &r, &g, &b) };
+
+    for i in 0..image.height as u8
+    {
+        for j in 0..image.width as u8
+        {
+            ar = r as *mut i32;
+            ag = g as *mut i32;
+            ab = b as *mut i32;
+            println!("pixel : R({:?}), G({:?}), B({:?})",ar,ag,ab);
+            unsafe {
+                r = r.offset(1);
+                g = g.offset(1);
+                b = b.offset(1);
+            }
+        }
+    }
     //println!("{:0}{}{}{}{}{}",xsize, ysize, rgb_max, r, g, b);
     return r;
 }

@@ -17,12 +17,12 @@ print("data" +str(lib.readPPM("/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm", xsize
 
 
 
-print("xsize : " + str(xsize))
-print("ysize : " + str(ysize))
-print("rgbmax : " + str(rgbmax))
-print("r : " + str(r))
-print("g : " + str(g))
-print("b : " + str(b))
+# print("xsize : " + str(xsize))
+# print("ysize : " + str(ysize))
+# print("rgbmax : " + str(rgbmax))
+# print("r : " + str(r))
+# print("g : " + str(g))
+# print("b : " + str(b))
 
 #lib.setFileName('/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm')
 

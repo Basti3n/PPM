@@ -361,7 +361,9 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
 {
   FILE *input;
   int numbytes;
-  input_name[strlen(input_name)-5] = '\0';
+  char delim[] = ".ppm";
+  char * p = strstr(input_name, ".ppm");
+  input_name[*p + 4] = '\0';
   input = fopen ( input_name, "rb" );
 
   if ( !input )
@@ -391,6 +393,17 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
   Close the file.
 */
   fclose ( input );
+
+  // for (int i = 0; i < *xsize; i++ )
+  //   {
+  //   for (int j = 0; j < *ysize; j++ )
+  //   {
+  //     printf("pixel : R(%d), G(%d), P(%d)\n",**r,**g,**b );
+  //     *r = *r + 1;
+  //     *g = *g + 1;
+  //     *b = *b  + 1;
+  //   }
+  // }
   printf("changed : %d\n", **r);
 
   return;
@@ -445,9 +458,11 @@ void ppma_read_data ( FILE *input, int xsize, int ysize, int *r,
         fprintf ( stderr, "  Unable to read data.\n" );
         exit ( 1 );
       }
+      // printf("pixel : R(%d), G(%d), P(%d)\n",*r,*g,*b );
       r = r + 1;
       g = g + 1;
       b = b + 1;
+      
     }
   }
   return;
@@ -958,4 +973,3 @@ int ppma_write_test ( char *output_name )
 
   return 0;
 }
-
