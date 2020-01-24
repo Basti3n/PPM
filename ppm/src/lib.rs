@@ -116,18 +116,26 @@ extern "C" {
 //Read the image file (C)
 #[no_mangle]
 pub extern fn readPPM(  input_name: *const c_char, 
-                        xsize:* mut c_int, 
-                        ysize:* mut c_int, 
-                        rgb_max:* mut c_int ,
-                        r:* mut c_int, 
-                        g:* mut c_int, 
-                        b:* mut c_int
-                    ) {
+                        xsizep:* mut c_int, 
+                        ysizep:* mut c_int, 
+                        rgb_maxp:* mut c_int ,
+                        rp:* mut c_int, 
+                        gp:* mut c_int, 
+                        bp:* mut c_int
+                    )-> * mut c_int {
+    let xsize:* mut c_int = xsizep ;
+    let ysize:* mut c_int = ysizep ; 
+    let rgb_max:* mut c_int = rgb_maxp ;
+    let r:* mut c_int = rp ; 
+    let g:* mut c_int = gp ;
+    let b:* mut c_int = bp ;
     let filename = unsafe {
         CStr::from_ptr(input_name).to_string_lossy().into_owned().to_string()
     };
     println!("{}",filename);
     unsafe { ppma_read(filename.as_ptr(), &xsize, &ysize,&rgb_max, &r, &g, &b) };
+    //println!("{:0}{}{}{}{}{}",xsize, ysize, rgb_max, r, g, b);
+    return r;
 }
 
 //Print a image file (C)

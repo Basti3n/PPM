@@ -13,7 +13,7 @@ r = -1
 g = -1
 b = -1
 
-lib.readPPM("/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm", xsize, ysize, rgbmax, r, g, b);
+print("data" +str(lib.readPPM("/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm", xsize, ysize, rgbmax, r, g, b)))
 
 
 

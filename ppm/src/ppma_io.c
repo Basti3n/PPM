@@ -391,6 +391,7 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
   Close the file.
 */
   fclose ( input );
+  printf("changed : %d\n", **r);
 
   return;
 }
