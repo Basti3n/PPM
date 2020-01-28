@@ -835,10 +835,11 @@ int ppma_write_data ( FILE *file_out, int xsize, int ysize, int *r,
     for ( i = 0; i < xsize; i++ )
     {
       fprintf ( file_out, "%d  %d  %d", *r_index, *g_index, *b_index );
+      printf("PIXEL  : r(%d), g(%d), b(%d)\n",*r_index,*g_index,*b_index);
       rgb_num = rgb_num + 3;
-      r_index = r_index + 1;
-      g_index = g_index + 1;
-      b_index = b_index + 1;
+      r_index = r_index + 2;
+      g_index = g_index + 2;
+      b_index = b_index + 2;
 
       if ( rgb_num % 12 == 0 || i == xsize - 1 || rgb_num == 3 * xsize * ysize )
       {

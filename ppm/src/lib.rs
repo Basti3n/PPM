@@ -186,8 +186,8 @@ fn writePPM( input_name: String,
                         text: Image
                     )-> c_int {
 
-        
-        println!(" ALLO {:?}",input_name);
+        let mut filename = format!("{}-inverted.ppm", input_name);
+        println!(" ALLO {:?}",filename);
         let mut r:Vec<* mut c_int> = Vec::new(); 
         let mut g:Vec<* mut c_int> = Vec::new();
         let mut b:Vec<* mut c_int> = Vec::new();
@@ -199,10 +199,11 @@ fn writePPM( input_name: String,
                 r.push(*i.red()  as * mut c_int);
                 g.push(*i.green()  as * mut c_int);
                 b.push(*i.blue()  as * mut c_int);
-                //println!("after : R({:?}), G({:?}), B({:?})",*i.red(),*i.green(),*i.blue());
+                println!("after : R({:?}), G({:?}), B({:?})",*i.red(),*i.green(),*i.blue());
+                println!("");
             }
         }
-    return unsafe { ppma_write(input_name.as_ptr(), text.height, text.width, &r[0], &g[0], &b[0]) };
+    return unsafe { ppma_write(filename.as_ptr(), text.height, text.width, &r[0], &g[0], &b[0]) };
 }
 
 //Read a file (RUST)
