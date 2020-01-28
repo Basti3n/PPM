@@ -361,10 +361,11 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
 {
   FILE *input;
   int numbytes;
-  char delim[] = ".ppm";
+  /*char delim[] = ".ppm";
   char * p = strstr(input_name, ".ppm");
   input_name[*p + 4] = '\0';
-  input = fopen ( input_name, "rb" );
+  printf("BNIKE: %s\n", input_name);*/
+  input = fopen ( input_name, "rt" );
 
   if ( !input )
   {
@@ -696,6 +697,11 @@ int ppma_write ( char *file_out_name, int xsize, int ysize, int *r,
   int *b_index;
   int error;
   FILE *file_out;
+  printf(" KC : %s \n",file_out_name);
+  /*char delim[] = ".ppm";
+  char * p = strstr(file_out_name, ".ppm");
+  printf("%s <\n",p);
+  file_out_name[*p + 4] = '\0';*/
   int *g_index;
   int i;
   int j;

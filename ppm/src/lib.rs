@@ -35,9 +35,9 @@ pub extern fn max(a:u8, b:u8)->u8{
 #[derive(Debug, Clone, Copy)]
 /* STRUCTURES */
 struct Pixel{
-    r:u8,
-    g:u8,
-    b:u8
+    r:*mut u8,
+    g:*mut u8,
+    b:*mut u8
 }
 
 //struct Pixel{
@@ -47,6 +47,7 @@ struct Pixel{
 struct Image{
     height: * mut c_int,
     width: * mut c_int,
+    rgbmax: * mut c_int,
     image:Vec<Pixel>
 }
 /*
@@ -67,27 +68,36 @@ impl Image{
 */
 
 impl Pixel{
-    fn new(red: u8, green: u8, blue: u8) -> Pixel {
+    fn new(red: *mut u8, green: *mut u8, blue: *mut u8) -> Pixel {
         Pixel {r: red, g: green, b: blue}
     }
-    fn red(&self) -> u8 {
+    fn red(&self) ->*mut u8 {
         self.r
     }
-    fn green(&self) -> u8 {
+    fn green(&self) -> *mut u8 {
         self.g
     }
-    fn blue(&self) -> u8 {
+    fn blue(&self) -> *mut u8 {
         self.b
     }
-    fn display(self) {
-        println!("({:x} {:x} {:x})", self.r, self.g, self.b)
+    unsafe fn display(self) {
+        println!("({:x} {:x} {:x})", *self.r, *self.g, *self.b)
     }
-    fn invert(mut self){
-        self.r = 255 - self.r;
-        self.g = 255 - self.g;
-        self.b = 255 - self.b;
+    unsafe fn invert(self, rgbmax : u8){
+        *self.r = rgbmax - *self.r;
+        *self.g = rgbmax - *self.g;
+        *self.b = rgbmax - *self.b;
     }
 }
+
+
+
+/*static mut Images:Image = Image{
+    height:0 as * mut c_int,
+    width:0 as * mut c_int,
+    image: Vec::new()   
+};*/
+
 
 
 /* **************************
@@ -104,12 +114,12 @@ extern "C" {
                     g:&* mut c_int, 
                     b:&* mut c_int
                 );
-    fn ppma_write ( file_out_name: CStrBuf,
+    fn ppma_write ( file_out_name: *const u8,
                     xsize: * mut c_int, 
                     ysize: * mut c_int, 
-                    r: * mut c_int,
-                    g: * mut c_int, 
-                    b: * mut c_int
+                    r: &* mut c_int,
+                    g: &* mut c_int, 
+                    b: &* mut c_int
                 ) -> c_int;
 }
 
@@ -127,54 +137,72 @@ pub extern fn readPPM(  input_name: *const c_char,
     /*                        
     let xsize:* mut c_int = xsizep ;
     let ysize:* mut c_int = ysizep ; */
-    let rgb_max:* mut c_int = rgb_maxp ;
     let mut r:* mut c_int = rp; 
     let mut g:* mut c_int = gp;
     let mut b:* mut c_int = bp;
-
-    let mut image = Image{
+    /*unsafe{
+        Images.width = ysizep;
+        Images.height = xsizep;
+        Images.image = Vec::new();
+    }*/
+    let mut images = Image{
         height : xsizep,
         width : ysizep,
-        image:Vec::new()
+        image:Vec::new(),
+        rgbmax:rgb_maxp
     };
 
     let filename = unsafe {
         CStr::from_ptr(input_name).to_string_lossy().into_owned().to_string()
     };
     println!("{}",filename);
-    unsafe { ppma_read(filename.as_ptr(), &image.height, &image.width,&rgb_max, &r, &g, &b) };
+    unsafe { ppma_read(filename.as_ptr(), &images.height, &images.width,&images.rgbmax, &r, &g, &b) };
     unsafe{
-        for i in 0..image.height as u8
+        for i in 0..images.height as u8
         {
-            for j in 0..image.width as u8
+            for j in 0..images.width as u8
             {
-                // ar = r as *mut i32;
-                // ag = g as *mut i32;
-                // ab = b as *mut i32;
-                println!("pixel : R({:?}), G({:?}), B({:?})",*(r as * mut u8),*(g as * mut u8),*(b as * mut u8));
-                image.image.push(Pixel::new(*(r as * mut u8), *(g as * mut u8), *(b as * mut u8)));
+                //println!("pixel : R({:?}), G({:?}), B({:?})",*(r as * mut u8),*(g as * mut u8),*(b as * mut u8));
+                images.image.push(Pixel::new(r as * mut u8, g as * mut u8, b as * mut u8));
                 r = r.offset(1);
                 g = g.offset(1);
                 b = b.offset(1);
-                println!("NIKE :({:?})",image.image.last());
+                //println!("NIKE :({:?})",images.image.last());
 
             }
         }
     }
     //println!("{:0}{}{}{}{}{}",xsize, ysize, rgb_max, r, g, b);
+    writePPM(filename,rp,gp,bp,images);
     return r;
 }
 
 //Print a image file (C)
-#[no_mangle]
-pub extern fn writePPM( file_out_name: CStrBuf,
-                        xsize: * mut c_int, 
-                        ysize: * mut c_int, 
-                        r: * mut c_int,
-                        g: * mut c_int, 
-                        b: * mut c_int
-                    ) -> c_int {
-    return unsafe { ppma_write(file_out_name, xsize, ysize, r, g, b) };
+
+fn writePPM( input_name: String, 
+                        rp:* mut c_int, 
+                        gp:* mut c_int, 
+                        bp:* mut c_int,
+                        text: Image
+                    )-> c_int {
+
+        
+        println!(" ALLO {:?}",input_name);
+        let mut r:Vec<* mut c_int> = Vec::new(); 
+        let mut g:Vec<* mut c_int> = Vec::new();
+        let mut b:Vec<* mut c_int> = Vec::new();
+        //println!("{:?}",text.rgbmax as u8);
+        unsafe{
+            for i in &text.image{
+                //println!("before : R({:?}), G({:?}), B({:?})",*i.red(),*i.green(),*i.blue());
+                i.invert(text.rgbmax as u8);
+                r.push(*i.red()  as * mut c_int);
+                g.push(*i.green()  as * mut c_int);
+                b.push(*i.blue()  as * mut c_int);
+                //println!("after : R({:?}), G({:?}), B({:?})",*i.red(),*i.green(),*i.blue());
+            }
+        }
+    return unsafe { ppma_write(input_name.as_ptr(), text.height, text.width, &r[0], &g[0], &b[0]) };
 }
 
 //Read a file (RUST)
