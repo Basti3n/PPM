@@ -361,10 +361,10 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
 {
   FILE *input;
   int numbytes;
-  /*char delim[] = ".ppm";
+  char delim[] = ".ppm";
   char * p = strstr(input_name, ".ppm");
-  input_name[*p + 4] = '\0';
-  printf("BNIKE: %s\n", input_name);*/
+  input_name[*p + 4 * sizeof(char)] = '\0';
+  //printf("BNIKE: %s\n", input_name);
   input = fopen ( input_name, "rb" );
 
   if ( !input )
@@ -697,11 +697,13 @@ int ppma_write ( char *file_out_name, int xsize, int ysize, int *r,
   int *b_index;
   int error;
   FILE *file_out;
-  printf(" KC : %s \n",file_out_name);
-  /*char delim[] = ".ppm";
+
+  char delim[] = ".ppm";
   char * p = strstr(file_out_name, ".ppm");
-  printf("%s <\n",p);
-  file_out_name[*p + 4] = '\0';*/
+  printf("LO: %s///\n", p);
+
+  file_out_name[*p + 4 * sizeof(char)] = '\0';
+  printf("BNIKE: %s///\n", file_out_name);
   int *g_index;
   int i;
   int j;
@@ -835,7 +837,7 @@ int ppma_write_data ( FILE *file_out, int xsize, int ysize, int *r,
     for ( i = 0; i < xsize; i++ )
     {
       fprintf ( file_out, "%d  %d  %d", *r_index, *g_index, *b_index );
-      printf("PIXEL  : r(%d), g(%d), b(%d)\n",*r_index,*g_index,*b_index);
+      //printf("PIXEL  : r(%d), g(%d), b(%d)\n",*r_index,*g_index,*b_index);
       rgb_num = rgb_num + 3;
       r_index = r_index + 2;
       g_index = g_index + 2;

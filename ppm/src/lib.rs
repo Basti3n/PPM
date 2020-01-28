@@ -1,3 +1,7 @@
+/*
+#![feature(test)]
+extern crate test;
+*/
 extern crate libc;
 extern crate c_string;
 use libc::{c_char, c_int, size_t};
@@ -14,10 +18,31 @@ use std::mem;
 // TEST function
 #[cfg(test)]
 mod tests {
+    //use super::*;
+    //use test::Bencher;
+
     #[test]
     fn it_works() {
         assert_eq!(2 + 2, 4);
     }
+    /*BENCHMARK
+    #[bench]
+    fn bench_dummy(b: &mut Bencher) {
+        b.iter(|| dummy());
+    }
+    #[bench]
+    fn bench_gray(b: &mut Bencher) {
+        //b.iter(|| grayColor());
+    }
+    #[bench]
+    fn bench_invert(b: &mut Bencher) {
+        //b.iter(|| invertColor());
+    }
+
+    fn bench_read(n: &mut Bencher) {
+        //b.iter(|| read_file());
+    }
+    */
 }
 
 // TEST function
