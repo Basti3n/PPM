@@ -393,17 +393,6 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
   Close the file.
 */
   fclose ( input );
-
-  // for (int i = 0; i < *xsize; i++ )
-  //   {
-  //   for (int j = 0; j < *ysize; j++ )
-  //   {
-  //     printf("pixel : R(%d), G(%d), P(%d)\n",**r,**g,**b );
-  //     *r = *r + 1;
-  //     *g = *g + 1;
-  //     *b = *b  + 1;
-  //   }
-  // }
   printf("changed : %d\n", **r);
 
   return;

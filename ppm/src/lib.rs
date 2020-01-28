@@ -131,11 +131,8 @@ pub extern fn readPPM(  input_name: *const c_char,
     let mut r:* mut c_int = rp; 
     let mut g:* mut c_int = gp;
     let mut b:* mut c_int = bp;
-    let mut ar:*mut i32;
-    let mut ag:*mut i32;
-    let mut ab:*mut i32;
 
-    let image = Image{
+    let mut image = Image{
         height : xsizep,
         width : ysizep,
         image:Vec::new()
@@ -146,19 +143,21 @@ pub extern fn readPPM(  input_name: *const c_char,
     };
     println!("{}",filename);
     unsafe { ppma_read(filename.as_ptr(), &image.height, &image.width,&rgb_max, &r, &g, &b) };
-
-    for i in 0..image.height as u8
-    {
-        for j in 0..image.width as u8
+    unsafe{
+        for i in 0..image.height as u8
         {
-            ar = r as *mut i32;
-            ag = g as *mut i32;
-            ab = b as *mut i32;
-            println!("pixel : R({:?}), G({:?}), B({:?})",ar,ag,ab);
-            unsafe {
+            for j in 0..image.width as u8
+            {
+                // ar = r as *mut i32;
+                // ag = g as *mut i32;
+                // ab = b as *mut i32;
+                println!("pixel : R({:?}), G({:?}), B({:?})",*(r as * mut u8),*(g as * mut u8),*(b as * mut u8));
+                image.image.push(Pixel::new(*(r as * mut u8), *(g as * mut u8), *(b as * mut u8)));
                 r = r.offset(1);
                 g = g.offset(1);
                 b = b.offset(1);
+                println!("NIKE :({:?})",image.image.last());
+
             }
         }
     }
