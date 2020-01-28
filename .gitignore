@@ -10,3 +10,5 @@ Cargo.lock
 **/*.rs.bk
 
 ppm/mandelbrot (1).ppm
+
+ppm/gros.ppm
