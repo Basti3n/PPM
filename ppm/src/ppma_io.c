@@ -365,7 +365,7 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
   char * p = strstr(input_name, ".ppm");
   input_name[*p + 4] = '\0';
   printf("BNIKE: %s\n", input_name);*/
-  input = fopen ( input_name, "rt" );
+  input = fopen ( input_name, "rb" );
 
   if ( !input )
   {

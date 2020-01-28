@@ -13,7 +13,8 @@ r = -1
 g = -1
 b = -1
 
-print("data" +str(lib.readPPM("/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm", xsize, ysize, rgbmax, r, g, b)))
+#print("data" +str(lib.revertColor("/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm", xsize, ysize, rgbmax, r, g, b)))
+print("data" +str(lib.grayColor("/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm", xsize, ysize, rgbmax, r, g, b)))
 
 
 
