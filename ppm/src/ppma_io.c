@@ -367,7 +367,7 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
   // printf("pom: %s\n", p);
   strcat(input_name,delim);
   sscanf(input_name, "test.ppm");
-  printf("input_name: %s.\nlen: %d(%d)\n", input_name, strlen(input_name), strlen("test.ppm"));
+  // printf("input_name: %s.\nlen: %d(%d)\n", input_name, strlen(input_name), strlen("test.ppm"));
   input = fopen ( input_name, "rb" );
 
   if ( !input )
@@ -397,7 +397,6 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
   Close the file.
 */
   fclose ( input );
-  printf("changed : %d\n", **r);
 
   return;
 }
@@ -701,11 +700,15 @@ int ppma_write ( char *file_out_name, int xsize, int ysize, int *r,
   int error;
   FILE *file_out;
 
-  char delim[] = ".ppm";
-  char * p = strstr(file_out_name, delim);
-  printf("file_out_name (p): %s///\n", p);
-  file_out_name[*p + 4 * sizeof(char)] = '\0';
-  printf("file_out_name (file_out_name): %s/\nlen: %d\n", file_out_name, strlen(file_out_name));
+  // char delim[] = ".ppm";
+  char fileoutput[] = "output.ppm";
+  // char * p = strstr(input_name, delim);
+  // input_name[*p + 4] = '\0';
+  // printf("pom: %s\n", p);
+  strcpy(file_out_name,fileoutput);
+  // printf("file_out_name (p): %s///\n", p);
+  // file_out_name[*p + 4 * sizeof(char)] = '\0';
+  // printf("file_out_name (file_out_name): %s/\nlen: %d\n", file_out_name, strlen(file_out_name));
   int *g_index;
   int i;
   int j;
@@ -714,7 +717,7 @@ int ppma_write ( char *file_out_name, int xsize, int ysize, int *r,
 /*
   Open the output file.
 */
-  file_out = fopen ( file_out_name, "wt" );
+  file_out = fopen ( file_out_name, "wb" );
 
   if ( !file_out )
   {
