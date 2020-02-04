@@ -1,7 +1,6 @@
-/*
 #![feature(test)]
 extern crate test;
-*/
+
 extern crate libc;
 extern crate c_string;
 use libc::{c_char, c_int, size_t};
@@ -18,31 +17,53 @@ use std::mem;
 // TEST function
 #[cfg(test)]
 mod tests {
-    //use super::*;
-    //use test::Bencher;
+    use super::*;
+    use test::Bencher;
 
     #[test]
     fn it_works() {
         assert_eq!(2 + 2, 4);
     }
-    /*BENCHMARK
     #[bench]
     fn bench_dummy(b: &mut Bencher) {
         b.iter(|| dummy());
     }
+
     #[bench]
     fn bench_gray(b: &mut Bencher) {
-        //b.iter(|| grayColor());
-    }
-    #[bench]
-    fn bench_invert(b: &mut Bencher) {
-        //b.iter(|| invertColor());
+        let input_name: *const c_char = CString::new("test").expect("CString::new failed").as_ptr();
+        let mut xsizep:* mut c_int; 
+        let mut ysizep:* mut c_int;
+        let mut rgb_maxp:* mut c_int;
+        let mut rp:* mut c_int;
+        let mut gp:* mut c_int; 
+        let mut bp:* mut c_int;
+        xsizep = 0 as * mut c_int;
+        ysizep = 0 as * mut c_int;
+        rgb_maxp = 0 as * mut c_int;
+        rp = 0 as * mut c_int;
+        gp = 0 as * mut c_int;
+        bp = 0 as * mut c_int;
+        b.iter(|| grayColorNOC(input_name, xsizep, ysizep, rgb_maxp, rp, gp, bp)); 
     }
 
-    fn bench_read(n: &mut Bencher) {
-        //b.iter(|| read_file());
+    #[bench]
+    fn bench_revert(b: &mut Bencher) {
+        let input_name: *const c_char = CString::new("test").expect("CString::new failed").as_ptr();
+        let mut xsizep:* mut c_int; 
+        let mut ysizep:* mut c_int;
+        let mut rgb_maxp:* mut c_int;
+        let mut rp:* mut c_int;
+        let mut gp:* mut c_int; 
+        let mut bp:* mut c_int;
+        xsizep = 0 as * mut c_int;
+        ysizep = 0 as * mut c_int;
+        rgb_maxp = 0 as * mut c_int;
+        rp = 0 as * mut c_int;
+        gp = 0 as * mut c_int;
+        bp = 0 as * mut c_int;
+        b.iter(|| revertColorNOC(input_name, xsizep, ysizep, rgb_maxp, rp, gp, bp));
     }
-    */
 }
 
 // TEST function
@@ -275,7 +296,7 @@ pub extern fn grayColor(input_name: *const c_char,
             //println!("after : R({:?}), G({:?}), B({:?})",r.last(), g.last(),b.last());
             //println!("");
         }
-        writePPM(&filenamed,&r,&g,&b,&images);
+        // writePPM(&filenamed,&r,&g,&b,&images);
     }
 }
 
@@ -305,4 +326,131 @@ pub extern fn setFileName(filenam: *const c_char) {
     }
     println!("Cake");
 
+}
+
+
+
+#[no_mangle]
+fn readPPMNOC(  filename: &String, 
+            xsizep:* mut c_int, 
+            ysizep:* mut c_int, 
+            rgb_maxp:* mut c_int ,
+            mut rp:* mut c_int, 
+            mut gp:* mut c_int, 
+            mut bp:* mut c_int,
+            mut images: &mut Image
+        )-> * mut c_int {
+
+    /*                        
+    let xsize:* mut c_int = xsizep ;
+    let ysize:* mut c_int = ysizep ; */
+    println!("{}",filename);
+    // unsafe { 
+    //     ppma_read(filename.as_ptr(), &images.height, &images.width,&images.rgbmax, &rp, &gp, &bp) 
+    // };
+    unsafe{
+        for i in 0..images.height as u8
+        {
+            for j in 0..images.width as u8
+            {
+                //println!("pixel : R({:?}), G({:?}), B({:?})",*(rp as * mut u8),*(gp as * mut u8),*(bp as * mut u8));
+                let x = Pixel::new(rp as * mut u8, gp as * mut u8, bp as * mut u8);
+                images.image.push(x);
+                rp = rp.offset(1);
+                gp = gp.offset(1);
+                bp = bp.offset(1);
+                //println!("NIKE :({:?})",images.image.last());
+
+            }
+        }
+    }
+    //println!("{:0}{}{}{}{}{}",xsize, ysize, rgb_max, r, g, b);
+    
+    return rp;
+}
+
+
+#[no_mangle]
+fn writePPMNOC( input_name: &String, 
+                r:&Vec<* mut c_int>, 
+                g:&Vec<* mut c_int>, 
+                b:&Vec<* mut c_int>,
+                mut text: &Image
+            )-> c_int {
+    2
+}
+
+#[no_mangle]
+pub extern fn revertColorNOC(input_name: *const c_char, 
+                        xsizep:* mut c_int, 
+                        ysizep:* mut c_int, 
+                        rgb_maxp:* mut c_int ,
+                        rp:* mut c_int, 
+                        gp:* mut c_int, 
+                        bp:* mut c_int){
+    
+    unsafe{
+        let mut images = Image{
+            height : xsizep,
+            width : ysizep,
+            image:Vec::new(),
+            rgbmax:rgb_maxp
+        };
+
+        let filename = CStr::from_ptr(input_name).to_string_lossy().into_owned().to_string();
+        readPPMNOC(&filename,images.height,images.width,images.rgbmax,rp,gp,bp,&mut images);
+        let filenamed = format!("{}-inverted.ppm", filename);
+        
+        let mut r:Vec<* mut c_int> = Vec::new(); 
+        let mut g:Vec<* mut c_int> = Vec::new();
+        let mut b:Vec<* mut c_int> = Vec::new();
+        for i in &images.image{
+            //println!("before : R({:?}), G({:?}), B({:?})",*i.red(),*i.green(),*i.blue());
+            i.invert(images.rgbmax as u8);
+            r.push(*i.red()  as * mut c_int);
+            g.push(*i.green()  as * mut c_int);
+            b.push(*i.blue()  as * mut c_int);
+            //println!("after : R({:?}), G({:?}), B({:?})",r.last(), g.last(),b.last());
+            //println!("");
+        }
+        writePPMNOC(&filenamed,&r,&g,&b,&images);
+    }
+}
+
+
+#[no_mangle]
+pub extern fn grayColorNOC(input_name: *const c_char, 
+                        xsizep:* mut c_int, 
+                        ysizep:* mut c_int, 
+                        rgb_maxp:* mut c_int ,
+                        rp:* mut c_int, 
+                        gp:* mut c_int, 
+                        bp:* mut c_int){
+    
+    unsafe{
+        let mut images = Image{
+            height : xsizep,
+            width : ysizep,
+            image:Vec::new(),
+            rgbmax:rgb_maxp
+        };
+
+        let filename = CStr::from_ptr(input_name).to_string_lossy().into_owned().to_string();
+        readPPMNOC(&filename,images.height,images.width,images.rgbmax,rp,gp,bp,&mut images);
+        let filenamed = format!("{}-gray.ppm", filename);
+        
+        let mut r:Vec<* mut c_int> = Vec::new(); 
+        let mut g:Vec<* mut c_int> = Vec::new();
+        let mut b:Vec<* mut c_int> = Vec::new();
+        for i in &images.image{
+            //println!("before : R({:?}), G({:?}), B({:?})",*i.red(),*i.green(),*i.blue());
+            i.gray();
+            r.push(*i.red()  as * mut c_int);
+            g.push(*i.green()  as * mut c_int);
+            b.push(*i.blue()  as * mut c_int);
+            //println!("after : R({:?}), G({:?}), B({:?})",r.last(), g.last(),b.last());
+            //println!("");
+        }
+        // writePPM(&filenamed,&r,&g,&b,&images);
+    }
 }

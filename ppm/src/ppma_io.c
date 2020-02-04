@@ -362,9 +362,12 @@ void ppma_read ( char *input_name, int *xsize, int *ysize, int *rgb_max,
   FILE *input;
   int numbytes;
   char delim[] = ".ppm";
-  char * p = strstr(input_name, ".ppm");
-  input_name[*p + 4 * sizeof(char)] = '\0';
-  //printf("BNIKE: %s\n", input_name);
+  // char * p = strstr(input_name, delim);
+  // input_name[*p + 4] = '\0';
+  // printf("pom: %s\n", p);
+  strcat(input_name,delim);
+  sscanf(input_name, "test.ppm");
+  printf("input_name: %s.\nlen: %d(%d)\n", input_name, strlen(input_name), strlen("test.ppm"));
   input = fopen ( input_name, "rb" );
 
   if ( !input )
@@ -699,11 +702,10 @@ int ppma_write ( char *file_out_name, int xsize, int ysize, int *r,
   FILE *file_out;
 
   char delim[] = ".ppm";
-  char * p = strstr(file_out_name, ".ppm");
-  printf("LO: %s///\n", p);
-
+  char * p = strstr(file_out_name, delim);
+  printf("file_out_name (p): %s///\n", p);
   file_out_name[*p + 4 * sizeof(char)] = '\0';
-  printf("BNIKE: %s///\n", file_out_name);
+  printf("file_out_name (file_out_name): %s/\nlen: %d\n", file_out_name, strlen(file_out_name));
   int *g_index;
   int i;
   int j;

@@ -17,4 +17,3 @@ c_string = "0.7.0"
 [lib]
 name = "ppm"
 crate-type = ["dylib"]
-sha1 = "0.6.0"

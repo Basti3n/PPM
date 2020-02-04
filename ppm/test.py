@@ -1,5 +1,5 @@
 from ctypes import cdll
-
+import time
 lib = cdll.LoadLibrary("target/debug/libppm.so")
 
 print(lib.dummy())
@@ -14,7 +14,15 @@ g = -1
 b = -1
 
 #print("data" +str(lib.revertColor("/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm", xsize, ysize, rgbmax, r, g, b)))
-print("data" +str(lib.grayColor("/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm", xsize, ysize, rgbmax, r, g, b)))
+# print("data" +str(lib.grayColor('/mnt/d/ESGI/Rust/PPM/ppm/test', xsize, ysize, rgbmax, r, g, b)))
+print("data" +str(lib.grayColor('test', xsize, ysize, rgbmax, r, g, b)))
+xsize = -1
+ysize = -1
+rgbmax = -1
+r = -1
+g = -1
+b = -1
+print("data" +str(lib.revertColor('test', xsize, ysize, rgbmax, r, g, b)))
 
 
 
