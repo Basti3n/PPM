@@ -1,7 +1,6 @@
-/*
 #![feature(test)]
 extern crate test;
-*/
+
 extern crate libc;
 extern crate c_string;
 use libc::{c_char, c_int, size_t};
@@ -18,31 +17,67 @@ use std::mem;
 // TEST function
 #[cfg(test)]
 mod tests {
-    //use super::*;
-    //use test::Bencher;
+    use super::*;
+    use test::Bencher;
 
     #[test]
     fn it_works() {
         assert_eq!(2 + 2, 4);
     }
-    /*BENCHMARK
     #[bench]
     fn bench_dummy(b: &mut Bencher) {
         b.iter(|| dummy());
     }
+
     #[bench]
     fn bench_gray(b: &mut Bencher) {
-        //b.iter(|| grayColor());
+        // let path = "/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm";
+        // let mut xsize = 0;
+        // let mut xsize_ptr = unsafe { &mut xsize as i32 };
+        // let mut ysize = 0;
+        // let mut ysize_ptr = unsafe { &mut ysize as i32 };
+        // let mut rgbmax = 0;
+        // let mut rgbmax_ptr = unsafe { &mut rgbmax as i32 };
+        // let mut r = 0;
+        // let mut r_ptr = unsafe { &mut r as i32 };
+        // let mut g = 0;
+        // let mut g_ptr = unsafe { &mut g as i32 };
+        // let mut b = 0;
+        // let mut b_ptr = unsafe { &mut b as i32 };
+        let input_name: *const c_char = CString::new("/mnt/d/4_eme_annee/Rust/Rust/ppm/test.ppm").expect("CString::new failed").as_ptr();
+        let mut xsizep:* mut c_int; 
+        let mut ysizep:* mut c_int;
+        let mut rgb_maxp:* mut c_int;
+        let mut rp:* mut c_int;
+        let mut gp:* mut c_int; 
+        let mut bp:* mut c_int;
+        
+        xsizep = 0;
+        ysizep = 0;
+        rgb_maxp = 0;
+        rp = 0;
+        gp = 0;
+        bp = 0;
+        b.iter(|| {
+            grayColor(input_name, xsizep, ysizep, rgb_maxp, rp, gp, bp);
+            
+            }
+        ); 
+            /*
+            input_name: *const c_char, 
+                        xsizep:* mut c_int, 
+                        ysizep:* mut c_int, 
+                        rgb_maxp:* mut c_int ,
+                        rp:* mut c_int, 
+                        gp:* mut c_int, 
+                        bp:* mut c_int
+        );*/
     }
+
     #[bench]
     fn bench_invert(b: &mut Bencher) {
         //b.iter(|| invertColor());
     }
-
-    fn bench_read(n: &mut Bencher) {
-        //b.iter(|| read_file());
-    }
-    */
 }
 
 // TEST function
@@ -163,7 +198,7 @@ fn readPPM(  filename: &String,
             mut rp:* mut c_int, 
             mut gp:* mut c_int, 
             mut bp:* mut c_int,
-            mut images: &mut Image
+            images: &mut Image
         )-> * mut c_int {
 
     /*                        
@@ -198,7 +233,7 @@ fn writePPM( input_name: &String,
                 r:&Vec<* mut c_int>, 
                 g:&Vec<* mut c_int>, 
                 b:&Vec<* mut c_int>,
-                mut text: &Image
+                text: &Image
             )-> c_int {
     return unsafe { ppma_write(input_name.as_ptr(), text.height, text.width,&r[0], &g[0], &b[0]) };
 }
