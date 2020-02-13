@@ -13,6 +13,14 @@ cargo +nightly build
 cargo +nightly bench
 ```
 
+## Création de la documentation
+
+Un dossier target est créé. Il faut aller dans le dossier `target/doc/ppm` et ouvrir le fichier `index.html` sur votre navigateur favori
+
+```bash
+cargo +nightly doc
+```
+
 ## Commandes pour lancer le python (v2.7)
 
 ```bash
